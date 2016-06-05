@@ -216,7 +216,7 @@ public static class GameObjectUtils
 						break;
 					p = p.parent;
 				}
-				if ( p.GetComponent<Rigidbody>() == null && TESUnity.TESUnity.instance.UseKinematicRigidbodies ) p.gameObject.AddComponent<Rigidbody>().isKinematic = true;
+				if ( p.GetComponent<Rigidbody>() == null && TESUnity.TESUnity.UseRigidbodies ) p.gameObject.AddComponent<Rigidbody>().isKinematic = true;
 			}
 		}
 

@@ -78,7 +78,7 @@ namespace TESUnity
 			RenderSettings.ambientIntensity = TESUnity.AmbientIntensity;
 
 			sunObj = GameObjectUtils.CreateDirectionalLight(Vector3.zero, Quaternion.Euler(new Vector3(50, 330, 0)));
-			sunObj.GetComponent<Light>().shadows = TESUnity.instance.EnableSunShadows ? LightShadows.Hard : LightShadows.None;
+			sunObj.GetComponent<Light>().shadows = TESUnity.EnableSunShadows ? LightShadows.Hard : LightShadows.None;
 			sunObj.SetActive(false);
 
 			waterObj = GameObject.Instantiate(TESUnity.instance.waterPrefab);
@@ -290,39 +290,46 @@ namespace TESUnity
 			// Cast a ray to see what the camera is looking at.
 			var ray = new Ray(playerCameraObj.transform.position, playerCameraObj.transform.forward);
 
-			int raycastHitCount = Physics.RaycastNonAlloc(ray , interactRaycastHitBuffer , maxInteractDistance );
+			int raycastHitCount = ( TESUnity.UseSphereCast ) ? Physics.SphereCastNonAlloc(ray , 0.1f , interactRaycastHitBuffer , maxInteractDistance) : Physics.RaycastNonAlloc(ray , interactRaycastHitBuffer , maxInteractDistance);
 
 			if ( raycastHitCount > 0 )
 			{
+				Array.Sort(interactRaycastHitBuffer , delegate (RaycastHit h1 , RaycastHit h2) { return h1.distance.CompareTo(h2.distance); });
 				for ( int i = 0 ; i < raycastHitCount ; i++ )
 				{
 					var hitInfo = interactRaycastHitBuffer[ i ];
-					var hitObj = hitInfo.collider.gameObject;
-
-					var component = hitObj.gameObject.GetComponentInParent<GenericObjectComponent>();
-					if ( component != null )
+					if ( hitInfo.collider != null )
 					{
-						if ( !string.IsNullOrEmpty( component.objData.name ) )
+						var hitObj = hitInfo.collider.gameObject;
+						var component = hitObj.gameObject.GetComponentInParent<GenericObjectComponent>();
+						if ( component != null )
 						{
-							switch ( component.gameObject.tag )
+							if ( !string.IsNullOrEmpty(component.objData.name) )
 							{
-								case "Door": SetInteractText(component.objData.name); if ( Input.GetKeyDown(KeyCode.E) ) OpenDoor(component); break;
-								case "Container": SetInteractText("Open " + component.objData.name); break;
-								case "Activator": SetInteractText(component.objData.name); break;
-								case "Lock":
-								case "Light":
-								case "Probe":
-								case "RepairTool":
-								case "Clothing":
-								case "Armor":
-								case "Weapon":
-								case "Ingredient":
-								case "Alchemical":
-								case "Apparatus":
-								case "MiscObj": SetInteractText("Take " + component.objData.name); TryRemoveObject(component.gameObject); break;
-								case "Book": SetInteractText(component.objData.name); TryRemoveObject(component.gameObject); if ( Input.GetKeyDown(KeyCode.F) ) component.Interact(); break;
+								switch ( component.gameObject.tag )
+								{
+									case "Door": SetInteractText(component.objData.name); if ( Input.GetKeyDown(KeyCode.E) ) OpenDoor(component); break;
+									case "Lock":
+									case "Light":
+									case "Probe":
+									case "RepairTool":
+									case "Clothing":
+									case "Armor":
+									case "Weapon":
+									case "Ingredient":
+									case "Alchemical":
+									case "Apparatus":
+									case "MiscObj": SetInteractText("Take " + component.objData.name); TryRemoveObject(component.gameObject); break;
+									case "Book": SetInteractText(component.objData.name); TryRemoveObject(component.gameObject); if ( Input.GetKeyDown(KeyCode.F) ) component.Interact(); break;
+									case "Container": SetInteractText("Open " + component.objData.name); break;
+									case "Activator": SetInteractText(component.objData.name); break;
+								}
+								break;//stop looking for hit objects
 							}
-							break;
+						}
+						else
+						{
+							RemoveInteractText(); //deactivate text if no interactable [ DOORS ONLY - REQUIRES EXPANSION ] is found
 						}
 					}
 					else
@@ -349,7 +356,7 @@ namespace TESUnity
 
 		public void ShowInteractText()
 		{
-			if ( !interactTextObj.activeSelf ) interactTextObj.SetActive( true );
+			if ( !interactTextObj.activeSelf && TESUnity.ShowObjectNames ) interactTextObj.SetActive( true );
 		}
 
 		public void RemoveInteractText ()
@@ -563,10 +570,10 @@ namespace TESUnity
 			lightComponent.color = new Color32(LIGH.LHDT.red, LIGH.LHDT.green, LIGH.LHDT.blue, 255);
 			lightComponent.intensity = 1.5f;
 			lightComponent.bounceIntensity = 0f;
-			lightComponent.shadows = ( TESUnity.instance.EnableLightShadows ) ? LightShadows.Soft : LightShadows.None;
+			lightComponent.shadows = ( TESUnity.EnableLightShadows ) ? LightShadows.Soft : LightShadows.None;
 
 
-			if ( !indoors && !TESUnity.instance.EnableExteriorLights )//disabling exterior cell lights because there is no day/night cycle
+			if ( !indoors && !TESUnity.EnableExteriorLights )//disabling exterior cell lights because there is no day/night cycle
 			{
 				lightComponent.enabled = false;
 			}
@@ -863,7 +870,7 @@ namespace TESUnity
 			lightComponent.intensity = 1.5f;
 			lightComponent.color = new Color32(245, 140, 40, 255);
 			lightComponent.enabled = false;
-			lightComponent.shadows = TESUnity.instance.EnableLightShadows ? LightShadows.Hard : LightShadows.None;
+			lightComponent.shadows = TESUnity.EnableLightShadows ? LightShadows.Hard : LightShadows.None;
 
 			lantern.transform.localPosition = cameraPoint.transform.localPosition - Vector3.up * 0.5f;
 			lantern.transform.SetParent(playerComponent.transform, false);
@@ -877,7 +884,7 @@ namespace TESUnity
 		{
 			var camera = GameObjectUtils.CreateMainCamera(position, Quaternion.identity);
 			camera.GetComponent<Camera>().cullingMask = ~(1 << markerLayer);
-			camera.GetComponent<Camera>().renderingPath = TESUnity.instance.RenderPath;
+			camera.GetComponent<Camera>().renderingPath = TESUnity.RenderPath;
 			return camera;
 		}
 		private GameObject CreateFlyingCamera(Vector3 position)

@@ -237,7 +237,7 @@ namespace TESUnity
 			if(collidable)
 			{
 				obj.AddComponent<MeshCollider>().sharedMesh = mesh;
-				if ( TESUnity.instance.UseKinematicRigidbodies )
+				if ( TESUnity.UseRigidbodies )
 					obj.AddComponent<Rigidbody>().isKinematic = true;
 			}
 

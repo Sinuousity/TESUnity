@@ -24,6 +24,8 @@ namespace TESUnity
 		{
 			public string dataFilesPath = "";//Default path should be blank so that the path selection UI is shown.
 			public bool useKinematicRigidbodies = true;
+			public bool showObjectNames = true;
+			public bool useSphereCast = true;
 		}
 		public Engine engine = new Engine();
 

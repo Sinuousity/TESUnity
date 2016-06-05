@@ -26,9 +26,8 @@ namespace TESUnity
 		public static string FullToLocalPath(string fullPath)
 		{
 			string fileNameFull = System.IO.Path.GetFileName(fullPath);
-			string fileName = System.IO.Path.GetFileNameWithoutExtension(fileNameFull);
 			string localPath = fullPath.Replace(TESUnity.Settings.engine.dataFilesPath , "");
-			return fullPath.Replace(fileNameFull , "");//remove file name + extension
+			return localPath.Replace(fileNameFull , "");//remove file name + extension
 		}
 
 		public static string LocalToFullPath(string localPath)

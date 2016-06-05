@@ -29,14 +29,6 @@ namespace TESUnity
 		#region Inspector-set Members
 
 		public string dataPath;
-		[SerializeField]private bool useKinematicRigidbodies = true;
-		[SerializeField]private bool music = false;
-		[SerializeField]private float ambientIntensity = 1.5f;
-		[SerializeField]private bool sunShadows = false;
-		[SerializeField]private bool lightShadows = false;
-		[SerializeField]private RenderingPath renderPath = RenderingPath.Forward;
-		[SerializeField]private bool exteriorCellLights = false;
-		[SerializeField]private bool animatedLights = false;
 
 		public SFXCollection debugCollection;
 		public Sprite UIBackgroundImg;
@@ -52,14 +44,16 @@ namespace TESUnity
 
 		public static bool FoundSettings		{ get { return __settingsFile != null; } }
 		public static string MWDataPath			{ get { if ( FoundSettings ) return Settings.engine.dataFilesPath; else return LocalSettingsObject.dataPathOverride; } }
-		public bool UseKinematicRigidbodies		{ get { return Settings.engine.useKinematicRigidbodies; } }
-		public bool EnableMusic					{ get { return Settings.audio.enableMusic; } }
+		public static bool UseRigidbodies		{ get { return Settings.engine.useKinematicRigidbodies; } }
+		public static bool UseSphereCast		{ get { return Settings.engine.useSphereCast; } }
+		public static bool ShowObjectNames		{ get { return Settings.engine.showObjectNames; } }
+		public static bool EnableMusic			{ get { return Settings.audio.enableMusic; } }
 		public static float AmbientIntensity	{ get { return Settings.graphics.ambientIntensity; } }
-		public bool EnableSunShadows			{ get { return Settings.graphics.sunShadows; } }
-		public bool EnableLightShadows			{ get { return Settings.graphics.lightShadows; } }
-		public RenderingPath RenderPath			{ get { return Settings.graphics.preferredRenderMode; } }
-		public bool EnableExteriorLights		{ get { return Settings.graphics.exteriorCellLights; } }
-		public bool EnableAnimatedLights		{ get { return Settings.graphics.animatedLights; } }
+		public static bool EnableSunShadows			{ get { return Settings.graphics.sunShadows; } }
+		public static bool EnableLightShadows			{ get { return Settings.graphics.lightShadows; } }
+		public static RenderingPath RenderPath			{ get { return Settings.graphics.preferredRenderMode; } }
+		public static bool EnableExteriorLights		{ get { return Settings.graphics.exteriorCellLights; } }
+		public static bool EnableAnimatedLights		{ get { return Settings.graphics.animatedLights; } }
 
 		private MorrowindDataReader MWDataReader;
 		private MorrowindEngine MWEngine;
