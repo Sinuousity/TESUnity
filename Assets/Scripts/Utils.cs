@@ -31,7 +31,6 @@ public static class StringUtils
 				return false;
 			}
 		}
-
 		return true;
 	}
 }

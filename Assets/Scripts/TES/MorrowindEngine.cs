@@ -75,7 +75,7 @@ namespace TESUnity
 			interactTextObj.SetActive(false);
 
 			RenderSettings.ambientMode = UnityEngine.Rendering.AmbientMode.Flat;
-			RenderSettings.ambientIntensity = TESUnity.instance.AmbientIntensity;
+			RenderSettings.ambientIntensity = TESUnity.AmbientIntensity;
 
 			sunObj = GameObjectUtils.CreateDirectionalLight(Vector3.zero, Quaternion.Euler(new Vector3(50, 330, 0)));
 			sunObj.GetComponent<Light>().shadows = TESUnity.instance.EnableSunShadows ? LightShadows.Hard : LightShadows.None;
@@ -308,8 +308,8 @@ namespace TESUnity
 							{
 								case "Door": SetInteractText(component.objData.name); if ( Input.GetKeyDown(KeyCode.E) ) OpenDoor(component); break;
 								case "Container": SetInteractText("Open " + component.objData.name); break;
-								case "Activator": SetInteractText("" + component.objData.name); break;
-								case "Lock": SetInteractText("Locked: " + component.objData.name); break;
+								case "Activator": SetInteractText(component.objData.name); break;
+								case "Lock":
 								case "Light":
 								case "Probe":
 								case "RepairTool":
@@ -320,7 +320,7 @@ namespace TESUnity
 								case "Alchemical":
 								case "Apparatus":
 								case "MiscObj": SetInteractText("Take " + component.objData.name); TryRemoveObject(component.gameObject); break;
-								case "Book": SetInteractText("" + component.objData.name); TryRemoveObject(component.gameObject); if ( Input.GetKeyDown(KeyCode.F) ) component.Interact(); break;
+								case "Book": SetInteractText(component.objData.name); TryRemoveObject(component.gameObject); if ( Input.GetKeyDown(KeyCode.F) ) component.Interact(); break;
 							}
 							break;
 						}

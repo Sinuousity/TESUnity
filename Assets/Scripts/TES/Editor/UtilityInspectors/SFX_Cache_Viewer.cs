@@ -52,7 +52,7 @@ public class SFX_Cache_Viewer : EditorWindow
 		else
 		{
 			GUI.backgroundColor = Color.Lerp(Color.yellow , Color.red , 0.5f);
-			GUILayout.Label("Waiting For Play mode" + new string('.' , ( int )Mathf.Repeat(( int )(EditorApplication.timeSinceStartup*2f) , 4)) , coloredLabel);
+			GUILayout.Label("Waiting For Play mode" + EditorGUIHelpers.Ellipsis , coloredLabel);
 			GUI.backgroundColor = Color.white;
 		}
 		Repaint();

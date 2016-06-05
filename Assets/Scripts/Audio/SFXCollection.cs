@@ -7,6 +7,8 @@ using System.Collections.Generic;
 public class SFXCollection : ScriptableObject
 {
 	public string localPath = "fx";
+	public List<string> fileNames = new List<string>();
+	public List<int> highlighted = new List<int>();
 	/// <summary>
 	/// NEEDS CHANGE TO A GLOBAL REFERNCE TO SUPPORT DIFFERING INSTALL DIRECTORIES
 	/// </summary>
@@ -14,9 +16,7 @@ public class SFXCollection : ScriptableObject
 	{
 		get
 		{
-			if ( TESUnity.TESUnity.FoundSettingsFile )
-				return TESUnity.TESUnity.SettingsFile.engine.dataFilesPath + "/Sound/" + localPath + "/";
-			return "C:/Program Files (x86)/Steam/steamapps/common/Morrowind/Data Files/Sound/" + localPath + "/";
+			return TESUnity.TESUnity.Settings.engine.dataFilesPath + "/Sound/" + localPath + "/";
 		}
 	}
 	public bool HasFile(string fileName)
@@ -27,18 +27,18 @@ public class SFXCollection : ScriptableObject
 	{
 		return directory + fileName + ".wav";
 	}
-	[ContextMenu("Find All Files At Directory")]
+
 	public void FindFiles ()
 	{
 		if ( Directory.Exists(directory) )
 		{
-			string[] filesPaths = Directory.GetFiles(directory);
+			var filesPaths = Directory.GetFiles(directory);
 			foreach (string fp in filesPaths)
 			{
 				if (fp.EndsWith(".wav"))
 				{
-					string[] split = fp.Split('/');
-					string fileName = split[ split.Length - 1 ];
+					var split = fp.Split('/');
+					var fileName = split[ split.Length - 1 ];
 					fileName = fileName.Remove(fileName.Length - 4);
 					if ( !fileNames.Contains(fileName) )
 						fileNames.Add(fileName);
@@ -48,10 +48,20 @@ public class SFXCollection : ScriptableObject
 		}
 	}
 
+	public void RemoveSelected ()
+	{
+		var willremove = new List<string>();
+
+		foreach ( int i in highlighted )
+			willremove.Add(fileNames[ i ]);
+		foreach ( string s in willremove )
+			fileNames.Remove(s);
+
+		highlighted.Clear();
+	}
+
 	public string RandomFile ()
 	{
 		return fileNames[ Random.Range(0 , fileNames.Count) ];
 	}
-
-	public List<string> fileNames = new List<string>();
 }

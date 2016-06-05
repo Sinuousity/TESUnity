@@ -30,14 +30,17 @@ public class SFXLoader : MonoBehaviour
 
 	public static Dictionary<string , SFXData> cachedSfx = new Dictionary<string , SFXData>();
 
-	/// <summary>
-	/// Loads a sound effect wav file from Morrowind's Sound directory.
-	/// Most likely a temporary implementation of SFX loading.
-	/// </summary>
-	/// <param name="fileName"> Name of the wav file. Does not include extension </param>
-	/// <param name="path"> Path within the Morrowind/Data Files/Sound/ folder. Always ends with a forward slash. </param>
-	/// <returns></returns>
-	public static SFXData LoadSfx( string fileName , string localPath )
+	public static SFXData LoadSFX ( string fullPath )
+	{
+		string fileName = System.IO.Path.GetFileNameWithoutExtension(fullPath);
+		string fileNameFull = System.IO.Path.GetFileName(fullPath);
+		string localPath = fullPath.Replace(TESUnity.TESUnity.Settings.engine.dataFilesPath , "");
+		localPath = fullPath.Remove(0 , 6);//remove "Sound/"
+		localPath = fullPath.Replace(fileNameFull , "");//remove file name + extension
+		return LoadSFX( fileName , localPath );
+	}
+
+	public static SFXData LoadSFX( string fileName , string localPath )
 	{
 		//check for cached sounds first
 		if ( cachedSfx.ContainsKey(fileName) ) return cachedSfx[ fileName ];
@@ -45,12 +48,29 @@ public class SFXLoader : MonoBehaviour
 		//otherwise load the new one and cache it
 		SFXData sfx = new SFXData();
 		sfx.name = fileName;
-		var fullPath = TESUnity.TESUnity.SettingsFile.engine.dataFilesPath + "/Sound/" + localPath + "/" + fileName + ".wav";
-		fullPath = fullPath.Replace("\\" , "/");
-		if ( fullPath.StartsWith("/") ) fullPath = fullPath.Remove(0 , 1);
+		var fullPath = PathCombine(TESUnity.TESUnity.Settings.engine.dataFilesPath , "Sound" , localPath , fileName + ".wav");
+		fullPath = fullPath.Replace("\\" , "/");//replace any backslashes with forward ones
+		if ( fullPath.StartsWith("/") ) fullPath = fullPath.Remove(0 , 1); //remove any leading slashes
 		var loader = new WWW("file:///" + fullPath);
 		instance.StartCoroutine(instance.c_LoadSFX( loader , sfx));
 		return sfx;
+	}
+
+	static string PathCombine ( params string[] strings )
+	{
+		if ( strings.Length < 1 )
+			return "";
+
+		if ( strings.Length < 2 )
+			return strings[0];
+
+		int i = 0;
+		string res = strings[ i ];
+		while ( i < strings.Length )
+		{
+			res = System.IO.Path.Combine(res, strings[ i++ ]);
+		}
+		return res;
 	}
 
 	public IEnumerator c_LoadSFX ( WWW loader , SFXData sfx )
@@ -66,7 +86,7 @@ public class SFXLoader : MonoBehaviour
 
 	public static void PlaySFX (string fileName , string localPath,Vector3 position)
 	{
-		var sfx = LoadSfx(fileName , localPath );
+		var sfx = LoadSFX(fileName , localPath );
 		if ( sfx.loaded )
 			AudioSource.PlayClipAtPoint(sfx.clip , position);
 		else

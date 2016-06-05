@@ -84,6 +84,7 @@
     <Compile Include="Assets\Scripts\FlyingCameraComponent.cs" />
     <Compile Include="Assets\Scripts\GUIUtils.cs" />
     <Compile Include="Assets\Scripts\GameObjectUtils.cs" />
+    <Compile Include="Assets\Scripts\GamePathUtils.cs" />
     <Compile Include="Assets\Scripts\TES\AutoNIFReader.cs" />
     <Compile Include="Assets\Scripts\TES\BSAFile.cs" />
     <Compile Include="Assets\Scripts\TES\Convert.cs" />

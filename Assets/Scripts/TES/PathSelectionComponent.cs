@@ -11,7 +11,8 @@ namespace TESUnity
 		private void Start()
 		{
 			TESUnity.TryFindSettings();
-			if ( TESUnity.FoundSettingsFile )
+			string existingPath = TESUnity.MWDataPath;
+			if (!string.IsNullOrEmpty(existingPath) && Directory.Exists(existingPath))
 			{
 				TESUnity.instance.enabled = true;
 				Destroy(this);
@@ -37,8 +38,10 @@ namespace TESUnity
 		{
 			var MWDataPath = inputField.GetComponent<InputField>().text;
 
+
 			if(Directory.Exists(MWDataPath))
 			{
+				LocalSettingsObject.dataPathOverride = MWDataPath;
 				var TESUnityComponent = GetComponent<TESUnity>();
 				TESUnityComponent.dataPath = MWDataPath;
 

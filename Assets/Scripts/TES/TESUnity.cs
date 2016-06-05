@@ -8,7 +8,23 @@ namespace TESUnity
 	public class TESUnity : MonoBehaviour
 	{
 		public static TESUnity instance;
-		public static LocalSettingsObject SettingsFile;
+		private static LocalSettingsObject __settingsFile;
+		public static LocalSettingsObject Settings
+		{
+			// any access to this property will attempt to find the Settings File if it is not cached.
+			// this means the Settings file reference will work in both play mode and the editor
+			get
+			{
+				if ( __settingsFile == null ) TryFindSettings();
+				if ( __settingsFile == null ) return new LocalSettingsObject();
+				return __settingsFile;
+			}
+			set
+			{
+				__settingsFile = value;
+			}
+		}
+		static bool warned = false;
 
 		#region Inspector-set Members
 
@@ -34,26 +50,16 @@ namespace TESUnity
 		public GameObject waterPrefab;
 		#endregion
 
-		public static bool FoundSettingsFile
-		{
-			// any access to this property will attempt to find the Settings File if it is not cached.
-			// this means the Settings file reference will work in both play mode and the editor
-			get
-			{
-				if ( SettingsFile == null )
-					TryFindSettings();
-				return SettingsFile != null;
-			}
-		}
-		public string MWDataPath { get { return FoundSettingsFile ? SettingsFile.engine.dataFilesPath : dataPath; } }
-		public bool UseKinematicRigidbodies { get { return FoundSettingsFile ? SettingsFile.engine.useKinematicRigidbodies : useKinematicRigidbodies; } }
-		public bool EnableMusic { get { return FoundSettingsFile ? SettingsFile.audio.enableMusic : music; } }
-		public float AmbientIntensity { get { return FoundSettingsFile ? SettingsFile.graphics.ambientIntensity : ambientIntensity; } }
-		public bool EnableSunShadows { get { return FoundSettingsFile ? SettingsFile.graphics.sunShadows : sunShadows; } }
-		public bool EnableLightShadows { get { return FoundSettingsFile ? SettingsFile.graphics.lightShadows : lightShadows; } }
-		public RenderingPath RenderPath { get { return FoundSettingsFile ? SettingsFile.graphics.preferredRenderMode : renderPath; } }
-		public bool EnableExteriorLights { get { return FoundSettingsFile ? SettingsFile.graphics.exteriorCellLights : exteriorCellLights; } }
-		public bool EnableAnimatedLights { get { return FoundSettingsFile ? SettingsFile.graphics.animatedLights : animatedLights; } }
+		public static bool FoundSettings		{ get { return __settingsFile != null; } }
+		public static string MWDataPath			{ get { if ( FoundSettings ) return Settings.engine.dataFilesPath; else return LocalSettingsObject.dataPathOverride; } }
+		public bool UseKinematicRigidbodies		{ get { return Settings.engine.useKinematicRigidbodies; } }
+		public bool EnableMusic					{ get { return Settings.audio.enableMusic; } }
+		public static float AmbientIntensity	{ get { return Settings.graphics.ambientIntensity; } }
+		public bool EnableSunShadows			{ get { return Settings.graphics.sunShadows; } }
+		public bool EnableLightShadows			{ get { return Settings.graphics.lightShadows; } }
+		public RenderingPath RenderPath			{ get { return Settings.graphics.preferredRenderMode; } }
+		public bool EnableExteriorLights		{ get { return Settings.graphics.exteriorCellLights; } }
+		public bool EnableAnimatedLights		{ get { return Settings.graphics.animatedLights; } }
 
 		private MorrowindDataReader MWDataReader;
 		private MorrowindEngine MWEngine;
@@ -71,7 +77,12 @@ namespace TESUnity
 		{
 			var foundSettings = Resources.LoadAll<LocalSettingsObject>("");
 			if ( foundSettings.Length > 0 )
-				SettingsFile = foundSettings[ 0 ]; // search for and load the first found Settings file from a Resources folder
+				Settings = foundSettings[ 0 ]; // search for and load the first found Settings file from a Resources folder
+			else if ( !warned )
+			{
+				Debug.LogWarning("No TESUnity Settings File found in any Resources Folder. \n Create one through Assets>Create>TES Unity>Settings");
+				warned = true;
+			}
 		}
 
 		private void Start()

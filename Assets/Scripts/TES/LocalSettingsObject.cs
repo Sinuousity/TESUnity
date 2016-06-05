@@ -11,14 +11,18 @@ namespace TESUnity
 	/// Instances created using this object are meant to be per-developer and should not be pushed to the repository.
 	/// 
 	/// This file itself should be pushed to the repository.
+	/// 
+	/// It is important that all variables in this file are assigned default values.
 	/// </summary>
 	[CreateAssetMenu(fileName = "TES Unity Settings", menuName = "TES Unity/Local Settings", order = 1)]
 	public class LocalSettingsObject : ScriptableObject
 	{
+		public static string dataPathOverride = "";
+
 		[System.Serializable]
 		public class Engine
 		{
-			public string dataFilesPath = "C:/Program Files (x86)/Steam/steamapps/common/Morrowind/Data Files";
+			public string dataFilesPath = "";//Default path should be blank so that the path selection UI is shown.
 			public bool useKinematicRigidbodies = true;
 		}
 		public Engine engine = new Engine();
