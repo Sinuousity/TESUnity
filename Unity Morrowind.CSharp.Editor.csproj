@@ -5,16 +5,16 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{427C831B-C0FA-B328-B3BD-76C1526545AB}</ProjectGuid>
+    <ProjectGuid>{A534AE6F-E9E5-C843-CD14-4FEC00FB83F3}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AssemblyName>Assembly-CSharp</AssemblyName>
+    <AssemblyName>Assembly-CSharp-Editor</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>Assets\smcs.rsp</CompilerResponseFile>
-    <UnityProjectType>Game:1</UnityProjectType>
+    <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
+    <CompilerResponseFile>Assets\gmcs.rsp</CompilerResponseFile>
+    <UnityProjectType>Editor:5</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.3.4f1</UnityVersion>
     <RootNamespace></RootNamespace>
@@ -52,14 +52,44 @@
     <Reference Include="UnityEngine">
       <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEditor">
+      <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Advertisements">
+      <HintPath>Library\UnityAssemblies\UnityEditor.Advertisements.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>Library\UnityAssemblies\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.EditorTestsRunner">
+      <HintPath>Library\UnityAssemblies\UnityEditor.EditorTestsRunner.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.UI">
+      <HintPath>Library\UnityAssemblies\UnityEditor.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.Networking">
       <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor">
-      <HintPath>Library\UnityAssemblies\UnityEditor.dll</HintPath>
+    <Reference Include="UnityEditor.Networking">
+      <HintPath>Library\UnityAssemblies\UnityEditor.Networking.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.TreeEditor">
+      <HintPath>Library\UnityAssemblies\UnityEditor.TreeEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.Graphs">
+      <HintPath>Library\UnityAssemblies\UnityEditor.Graphs.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.WebGL.Extensions">
+      <HintPath>Library\UnityAssemblies\UnityEditor.WebGL.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor.WindowsStandalone.Extensions">
+      <HintPath>Library\UnityAssemblies\UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
+      <HintPath>Library\UnityAssemblies\SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
     <Reference Include="MP3Sharp">
       <HintPath>Assets\Libraries\MP3Sharp.dll</HintPath>
@@ -70,45 +100,13 @@
       <Project>{4E5E8C23-8B27-3152-07DB-98FE85F3206E}</Project>
       <Name>Unity Morrowind.CSharp.Plugins</Name>
     </ProjectReference>
+    <ProjectReference Include="Unity Morrowind.CSharp.csproj">
+      <Project>{427C831B-C0FA-B328-B3BD-76C1526545AB}</Project>
+      <Name>Unity Morrowind.CSharp</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\ArrayRange.cs" />
-    <Compile Include="Assets\Scripts\Audio\AudioUtils.cs" />
-    <Compile Include="Assets\Scripts\Audio\MusicPlayer.cs" />
-    <Compile Include="Assets\Scripts\Audio\OneShotAudioSourceComponent.cs" />
-    <Compile Include="Assets\Scripts\Audio\OneShotAudioStreamComponent.cs" />
-    <Compile Include="Assets\Scripts\Audio\SFXCollection.cs" />
-    <Compile Include="Assets\Scripts\Audio\SFXLoader.cs" />
-    <Compile Include="Assets\Scripts\ColorUtils.cs" />
-    <Compile Include="Assets\Scripts\DDSReader.cs" />
-    <Compile Include="Assets\Scripts\FlyingCameraComponent.cs" />
-    <Compile Include="Assets\Scripts\GUIUtils.cs" />
-    <Compile Include="Assets\Scripts\GameObjectUtils.cs" />
-    <Compile Include="Assets\Scripts\TES\AutoNIFReader.cs" />
-    <Compile Include="Assets\Scripts\TES\BSAFile.cs" />
-    <Compile Include="Assets\Scripts\TES\Convert.cs" />
-    <Compile Include="Assets\Scripts\TES\ESMFile.cs" />
-    <Compile Include="Assets\Scripts\TES\LocalSettingsObject.cs" />
-    <Compile Include="Assets\Scripts\TES\MaterialManager.cs" />
-    <Compile Include="Assets\Scripts\TES\MorrowindDataReader.cs" />
-    <Compile Include="Assets\Scripts\TES\MorrowindEngine.cs" />
-    <Compile Include="Assets\Scripts\TES\NIFManager.cs" />
-    <Compile Include="Assets\Scripts\TES\NIFObjectBuilder.cs" />
-    <Compile Include="Assets\Scripts\TES\NIFParserGenerator.cs" />
-    <Compile Include="Assets\Scripts\TES\NIFReader.cs" />
-    <Compile Include="Assets\Scripts\TES\PathSelectionComponent.cs" />
-    <Compile Include="Assets\Scripts\TES\PlayerComponent.cs" />
-    <Compile Include="Assets\Scripts\TES\TESUnity.cs" />
-    <Compile Include="Assets\Scripts\TES\TextureManager.cs" />
-    <Compile Include="Assets\Scripts\TES\World Object Components\GenericObjectComponent.cs" />
-    <Compile Include="Assets\Scripts\TES\World Object Components\LightAnim.cs" />
-    <Compile Include="Assets\Scripts\TemporalLoadBalancer.cs" />
-    <Compile Include="Assets\Scripts\Texture2DInfo.cs" />
-    <Compile Include="Assets\Scripts\TextureUtils.cs" />
-    <Compile Include="Assets\Scripts\UnityBinaryReader.cs" />
-    <Compile Include="Assets\Scripts\Utils.cs" />
-    <Compile Include="Assets\Scripts\Vector2i.cs" />
-    <Compile Include="Assets\Scripts\VirtualFileSystem.cs" />
+    <Compile Include="Assets\Scripts\TES\Editor\UtilityInspectors\SFX_Cache_Viewer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\MWCG.cginc" />

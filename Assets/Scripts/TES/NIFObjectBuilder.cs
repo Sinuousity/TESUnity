@@ -164,6 +164,7 @@ namespace TESUnity
 			}
 			else if(obj.GetType() == typeof(NiBSAnimationNode))
 			{
+				Debug.Log("Animation Node Created");
 				return null;
 			}
 			else if(obj.GetType() == typeof(NiBSParticleNode))
@@ -174,8 +175,13 @@ namespace TESUnity
 			{
 				return null;
 			}
-			else if(obj.GetType() == typeof(NiAutoNormalParticles))
+			else if ( obj.GetType() == typeof(NiAutoNormalParticles) )
 			{
+				return null;
+			}
+			else if ( obj.GetType() == typeof(NiUVController) )
+			{
+				Debug.Log("UV Controller Created");
 				return null;
 			}
 			else
@@ -346,9 +352,9 @@ namespace TESUnity
 				{
 					materialProperty = (NiMaterialProperty)prop;
 				}
-				else if(prop is NiAlphaProperty)
+				else if ( prop is NiAlphaProperty )
 				{
-					alphaProperty = (NiAlphaProperty)prop;
+					alphaProperty = ( NiAlphaProperty )prop;
 				}
 			}
 

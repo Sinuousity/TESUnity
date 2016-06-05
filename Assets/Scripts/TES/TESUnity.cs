@@ -8,6 +8,7 @@ namespace TESUnity
 	public class TESUnity : MonoBehaviour
 	{
 		public static TESUnity instance;
+		public static LocalSettingsObject SettingsFile;
 
 		#region Inspector-set Members
 
@@ -18,9 +19,10 @@ namespace TESUnity
 		[SerializeField]private bool sunShadows = false;
 		[SerializeField]private bool lightShadows = false;
 		[SerializeField]private RenderingPath renderPath = RenderingPath.Forward;
-		[SerializeField]private bool exteriorCellLights;
+		[SerializeField]private bool exteriorCellLights = false;
 		[SerializeField]private bool animatedLights = false;
 
+		public SFXCollection debugCollection;
 		public Sprite UIBackgroundImg;
 		public Sprite UICheckmarkImg;
 		public Sprite UIDropdownArrowImg;
@@ -32,17 +34,26 @@ namespace TESUnity
 		public GameObject waterPrefab;
 		#endregion
 
-		private LocalSettingsObject settingsFile;
-		public bool FoundSettingsFile { get { return settingsFile != null; } }
-		public string MWDataPath { get { return FoundSettingsFile ? settingsFile.engine.dataFilesPath : dataPath; } }
-		public bool UseKinematicRigidbodies { get { return FoundSettingsFile ? settingsFile.engine.useKinematicRigidbodies : useKinematicRigidbodies; } }
-		public bool EnableMusic { get { return FoundSettingsFile ? settingsFile.audio.enableMusic : music; } }
-		public float AmbientIntensity { get { return FoundSettingsFile ? settingsFile.graphics.ambientIntensity : ambientIntensity; } }
-		public bool EnableSunShadows { get { return FoundSettingsFile ? settingsFile.graphics.sunShadows : sunShadows; } }
-		public bool EnableLightShadows { get { return FoundSettingsFile ? settingsFile.graphics.lightShadows : lightShadows; } }
-		public RenderingPath RenderPath { get { return FoundSettingsFile ? settingsFile.graphics.preferredRenderMode : renderPath; } }
-		public bool EnableExteriorLights { get { return FoundSettingsFile ? settingsFile.graphics.exteriorCellLights : exteriorCellLights; } }
-		public bool EnableAnimatedLights { get { return FoundSettingsFile ? settingsFile.graphics.animatedLights : animatedLights; } }
+		public static bool FoundSettingsFile
+		{
+			// any access to this property will attempt to find the Settings File if it is not cached.
+			// this means the Settings file reference will work in both play mode and the editor
+			get
+			{
+				if ( SettingsFile == null )
+					TryFindSettings();
+				return SettingsFile != null;
+			}
+		}
+		public string MWDataPath { get { return FoundSettingsFile ? SettingsFile.engine.dataFilesPath : dataPath; } }
+		public bool UseKinematicRigidbodies { get { return FoundSettingsFile ? SettingsFile.engine.useKinematicRigidbodies : useKinematicRigidbodies; } }
+		public bool EnableMusic { get { return FoundSettingsFile ? SettingsFile.audio.enableMusic : music; } }
+		public float AmbientIntensity { get { return FoundSettingsFile ? SettingsFile.graphics.ambientIntensity : ambientIntensity; } }
+		public bool EnableSunShadows { get { return FoundSettingsFile ? SettingsFile.graphics.sunShadows : sunShadows; } }
+		public bool EnableLightShadows { get { return FoundSettingsFile ? SettingsFile.graphics.lightShadows : lightShadows; } }
+		public RenderingPath RenderPath { get { return FoundSettingsFile ? SettingsFile.graphics.preferredRenderMode : renderPath; } }
+		public bool EnableExteriorLights { get { return FoundSettingsFile ? SettingsFile.graphics.exteriorCellLights : exteriorCellLights; } }
+		public bool EnableAnimatedLights { get { return FoundSettingsFile ? SettingsFile.graphics.animatedLights : animatedLights; } }
 
 		private MorrowindDataReader MWDataReader;
 		private MorrowindEngine MWEngine;
@@ -56,11 +67,11 @@ namespace TESUnity
 			instance = this;
 		}
 
-		public void TryFindSettings()
+		public static void TryFindSettings()
 		{
 			var foundSettings = Resources.LoadAll<LocalSettingsObject>("");
 			if ( foundSettings.Length > 0 )
-				settingsFile = foundSettings[ 0 ]; // search for and load the first found Settings file from a Resources folder
+				SettingsFile = foundSettings[ 0 ]; // search for and load the first found Settings file from a Resources folder
 		}
 
 		private void Start()
@@ -109,6 +120,11 @@ namespace TESUnity
 				{
 					Debug.Log(MWEngine.currentCell.NAME.value);
 				}
+			}
+
+			if (Input.GetKeyDown(KeyCode.O))
+			{
+				SFXLoader.PlaySFX(debugCollection.RandomFile() , debugCollection.localPath , Camera.allCameras[ 0 ].transform.position);
 			}
 		}
 

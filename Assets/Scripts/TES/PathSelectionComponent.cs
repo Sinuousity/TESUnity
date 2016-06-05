@@ -10,8 +10,8 @@ namespace TESUnity
 
 		private void Start()
 		{
-			TESUnity.instance.TryFindSettings();
-			if ( TESUnity.instance.FoundSettingsFile )
+			TESUnity.TryFindSettings();
+			if ( TESUnity.FoundSettingsFile )
 			{
 				TESUnity.instance.enabled = true;
 				Destroy(this);
