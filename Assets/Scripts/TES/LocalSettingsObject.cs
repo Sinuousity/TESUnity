@@ -45,6 +45,8 @@ namespace TESUnity
 		public class Audio
 		{
 			public bool enableMusic = true;
+			public bool enableSoundEffects = true;
+			public AnimationCurve sfxRolloff = AnimationCurve.EaseInOut(0f , 1f , 1f , 0f);
 		}
 		public Audio audio = new Audio();
 	}

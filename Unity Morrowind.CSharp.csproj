@@ -103,6 +103,7 @@
     <Compile Include="Assets\Scripts\TES\TextureManager.cs" />
     <Compile Include="Assets\Scripts\TES\World Object Components\GenericObjectComponent.cs" />
     <Compile Include="Assets\Scripts\TES\World Object Components\LightAnim.cs" />
+    <Compile Include="Assets\Scripts\TES\World Object Components\SoundSource.cs" />
     <Compile Include="Assets\Scripts\TemporalLoadBalancer.cs" />
     <Compile Include="Assets\Scripts\Texture2DInfo.cs" />
     <Compile Include="Assets\Scripts\TextureUtils.cs" />

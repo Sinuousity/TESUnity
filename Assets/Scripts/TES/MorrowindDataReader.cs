@@ -56,7 +56,9 @@ namespace TESUnity
 			if(filePath != null)
 			{
 				var fileData = MorrowindBSAFile.LoadFileData(filePath);
-				return DDSReader.LoadDDSTexture(new MemoryStream(fileData));
+				Texture2DInfo info = DDSReader.LoadDDSTexture(new MemoryStream(fileData));
+				info.fileName = Path.GetFileNameWithoutExtension(filePath);
+				return info;
 			}
 			else
 			{
@@ -126,13 +128,13 @@ namespace TESUnity
 			var textureNameInTexturesDir = "textures/" + textureName;
 
 			var filePath = textureNameInTexturesDir + ".dds";
-			if(MorrowindBSAFile.ContainsFile(filePath))
+			if ( MorrowindBSAFile.ContainsFile(filePath) )
 			{
 				return filePath;
 			}
 
 			filePath = textureNameInTexturesDir + ".tga";
-			if(MorrowindBSAFile.ContainsFile(filePath))
+			if ( MorrowindBSAFile.ContainsFile(filePath) )
 			{
 				return filePath;
 			}
@@ -140,18 +142,39 @@ namespace TESUnity
 			var texturePathWithoutExtension = Path.GetDirectoryName(texturePath) + '/' + textureName;
 
 			filePath = texturePathWithoutExtension + ".dds";
-			if(MorrowindBSAFile.ContainsFile(filePath))
+			if ( MorrowindBSAFile.ContainsFile(filePath) )
 			{
 				return filePath;
 			}
-			
+
 			filePath = texturePathWithoutExtension + ".tga";
-			if(MorrowindBSAFile.ContainsFile(filePath))
+			if ( MorrowindBSAFile.ContainsFile(filePath) )
 			{
 				return filePath;
 			}
 
 			// Could not find the file.
+			return null;
+		}
+
+		/// <summary>
+		/// Finds the actual path of a sound file.
+		/// </summary>
+		public SOUNRecord FindSound(string soundName)
+		{
+			if ( string.IsNullOrEmpty(soundName) )
+				return null;
+
+			List<Record> allSounds = MorrowindESMFile.recordsByType[ typeof(SOUNRecord) ];
+			
+			foreach (SOUNRecord record in allSounds )
+			{
+				if ( record.NAME != null && record.NAME.value == soundName )
+				{
+					return record;
+				}
+			}
+			Debug.Log("Sound '" + soundName + "' not found!");
 			return null;
 		}
 	}

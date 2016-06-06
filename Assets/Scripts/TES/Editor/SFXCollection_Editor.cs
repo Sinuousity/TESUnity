@@ -30,7 +30,7 @@ public class SFXCollection_Editor : Editor
 			if ( GUILayout.Button("Clear Files") ) ( serializedObject.targetObject as SFXCollection ).fileNames.Clear();
 			if ( GUILayout.Button("Remove Highlighted Files") ) ( serializedObject.targetObject as SFXCollection ).RemoveSelected();
 		}
-		if ( fileList.Count > 0 ) EditorGUIHelpers.FancyListScrollView(ref scrollPos , fileList.Count + "Files:" , fileList , ref collection.highlighted , 20);
+		if ( fileList.Count > 0 ) EditorGUIHelpers.FancyListArea(ref scrollPos , fileList.Count + "Files:" , fileList , ref collection.highlighted , 20);
 
 		serializedObject.ApplyModifiedProperties();
 	}

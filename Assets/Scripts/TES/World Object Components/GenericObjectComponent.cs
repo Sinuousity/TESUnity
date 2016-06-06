@@ -7,6 +7,7 @@ namespace TESUnity
 	public class GenericObjectComponent : MonoBehaviour
 	{
 		public ESM.CELLRecord.RefObjDataGroup refObjDataGroup = null;
+		[System.Serializable]
 		public class DoorData
 		{
 			public string doorName;
@@ -17,9 +18,15 @@ namespace TESUnity
 			public Quaternion doorExitOrientation;
 
 			public bool isOpen;
+			public bool isLocked;
+			[HideInInspector]
 			public Quaternion closedRotation;
+			[HideInInspector]
 			public Quaternion openRotation;
+			[HideInInspector]
 			public bool moving = false;
+			public string openSound;
+			public string closeSound;
 		}
 		public DoorData doorData = null;
 
@@ -29,6 +36,7 @@ namespace TESUnity
 			public Light lightComponent;
 			public enum LightFlags { Dynamic = 0x0001 , CanCarry = 0x0002 , Negative = 0x0004 , Flicker = 0x0008 , Fire = 0x0010 , OffDefault = 0x0020 , FlickerSlow = 0x0040 , Pulse = 0x0080 , PulseSlow = 0x0100 }
 			public int flags;
+			public string lightSound;
 		}
 		public LightData lightData = null;
 
@@ -72,6 +80,9 @@ namespace TESUnity
 			ESM.DOORRecord DOOR = record as ESM.DOORRecord;
 			if ( DOOR.FNAM != null ) doorData.doorName = DOOR.FNAM.value;
 
+			if ( DOOR.SNAM != null ) doorData.openSound = DOOR.SNAM.value;
+			if ( DOOR.ANAM != null ) doorData.closeSound = DOOR.ANAM.value;
+
 			doorData.leadsToAnotherCell = ( refObjDataGroup.DNAM != null ) || ( refObjDataGroup.DODT != null );
 			doorData.leadsToInteriorCell = ( refObjDataGroup.DNAM != null );
 			if ( doorData.leadsToInteriorCell ) doorData.doorExitName = refObjDataGroup.DNAM.value;
@@ -94,9 +105,15 @@ namespace TESUnity
 		{
 			lightData = new LightData();
 			ESM.LIGHRecord LIGH = record as ESM.LIGHRecord;
+			if ( LIGH.SNAM != null )
+				lightData.lightSound = LIGH.SNAM.value;
 			lightData.lightComponent = gameObject.GetComponentInChildren<Light>(true);
-			if ( LIGH.FNAM != null )
-				objData.name = LIGH.FNAM.value;
+			SoundSource src = gameObject.AddComponent<SoundSource>();
+			src.looping = true;
+			ESM.SOUNRecord SOUN = MorrowindEngine.instance.dataReader.FindSound(lightData.lightSound);
+			src.soundData = SFXLoader.LoadSFX(SOUN);
+			src.StartCoroutine(src.c_Init());
+			if ( LIGH.FNAM != null ) objData.name = LIGH.FNAM.value;
 			if ( LIGH.LHDT != null )
 			{
 				lightData.flags = LIGH.LHDT.flags;
@@ -182,6 +199,8 @@ namespace TESUnity
 
 		private IEnumerator c_Open()
 		{
+			ESM.SOUNRecord SOUN = MorrowindEngine.instance.dataReader.FindSound(doorData.openSound);
+			SFXLoader.PlaySFX(SOUN , transform.position);
 			doorData.moving = true;
 			while ( Quaternion.Angle(transform.rotation , doorData.openRotation) > 1f )
 			{
@@ -195,6 +214,9 @@ namespace TESUnity
 		private IEnumerator c_Close()
 		{
 			doorData.moving = true;
+			ESM.SOUNRecord SOUN = MorrowindEngine.instance.dataReader.FindSound(doorData.closeSound);
+			SFXLoader.PlaySFX(SOUN , transform.position);
+			yield return new WaitForSeconds(0.5f);
 			while ( Quaternion.Angle(transform.rotation , doorData.closedRotation) > 1f )
 			{
 				transform.rotation = Quaternion.Slerp(transform.rotation , doorData.closedRotation , Time.deltaTime * 5f);

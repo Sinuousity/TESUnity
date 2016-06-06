@@ -48,12 +48,14 @@ namespace TESUnity
 		public static bool UseSphereCast		{ get { return Settings.engine.useSphereCast; } }
 		public static bool ShowObjectNames		{ get { return Settings.engine.showObjectNames; } }
 		public static bool EnableMusic			{ get { return Settings.audio.enableMusic; } }
+		public static bool EnableSoundEffects	{ get { return Settings.audio.enableSoundEffects; } }
+		public static AnimationCurve SFXRolloff { get { return Settings.audio.sfxRolloff; } }
 		public static float AmbientIntensity	{ get { return Settings.graphics.ambientIntensity; } }
-		public static bool EnableSunShadows			{ get { return Settings.graphics.sunShadows; } }
-		public static bool EnableLightShadows			{ get { return Settings.graphics.lightShadows; } }
-		public static RenderingPath RenderPath			{ get { return Settings.graphics.preferredRenderMode; } }
-		public static bool EnableExteriorLights		{ get { return Settings.graphics.exteriorCellLights; } }
-		public static bool EnableAnimatedLights		{ get { return Settings.graphics.animatedLights; } }
+		public static bool EnableSunShadows		{ get { return Settings.graphics.sunShadows; } }
+		public static bool EnableLightShadows	{ get { return Settings.graphics.lightShadows; } }
+		public static RenderingPath RenderPath	{ get { return Settings.graphics.preferredRenderMode; } }
+		public static bool EnableExteriorLights	{ get { return Settings.graphics.exteriorCellLights; } }
+		public static bool EnableAnimatedLights	{ get { return Settings.graphics.animatedLights; } }
 
 		private MorrowindDataReader MWDataReader;
 		private MorrowindEngine MWEngine;

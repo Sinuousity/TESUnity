@@ -35,7 +35,8 @@ namespace TESUnity
 	public class MaterialManager
 	{
 		public TextureManager textureManager;
-		private Dictionary<MWMaterialProps , Material> existingMaterials = new Dictionary<MWMaterialProps , Material>();
+		public static Dictionary<MWMaterialProps , Material> existingMaterials = new Dictionary<MWMaterialProps , Material>();
+		public static bool changed = false;
 		public MaterialManager ( TextureManager textureManager ){ this.textureManager = textureManager; }
 
 		public Material BuildMaterialFromProperties ( MWMaterialProps mp )
@@ -66,6 +67,7 @@ namespace TESUnity
 				if ( m.HasProperty( "_Metallic" ) ) m.SetFloat( "_Metallic" , 0f );
 				if ( m.HasProperty( "_Glossiness" ) ) m.SetFloat( "_Glossiness" , 0f );
 				existingMaterials[ mp ] = m;
+				changed = true;
 			}
 			return m;
 		}

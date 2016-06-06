@@ -9,6 +9,7 @@ public class SFXLoader : MonoBehaviour
 		public string name;
 		public AudioClip clip;
 		public bool loaded = false;
+		public float volume = 0f;
 	}
 
 	private static SFXLoader __instance;
@@ -30,6 +31,20 @@ public class SFXLoader : MonoBehaviour
 
 	public static Dictionary<string , SFXData> cachedSfx = new Dictionary<string , SFXData>();
 
+	public static SFXData LoadSFX(TESUnity.ESM.SOUNRecord record)
+	{
+		if ( record != null )
+		{
+			if ( record.FNAM != null )
+			{
+				SFXData data = LoadSFX(record.FNAM.value , "");
+				if ( record.DATA != null ) data.volume = record.DATA.volume;
+				return data;
+			}
+		}
+		return null;
+	}
+
 	public static SFXData LoadSFX ( string fullPath )
 	{
 		string fileName = System.IO.Path.GetFileNameWithoutExtension(fullPath);
@@ -48,7 +63,7 @@ public class SFXLoader : MonoBehaviour
 		//otherwise load the new one and cache it
 		SFXData sfx = new SFXData();
 		sfx.name = fileName;
-		var fullPath = PathCombine(TESUnity.TESUnity.Settings.engine.dataFilesPath , "Sound" , localPath , fileName + ".wav");
+		var fullPath = PathCombine(TESUnity.TESUnity.Settings.engine.dataFilesPath , "Sound" , localPath , fileName );
 		fullPath = fullPath.Replace("\\" , "/");//replace any backslashes with forward ones
 		if ( fullPath.StartsWith("/") ) fullPath = fullPath.Remove(0 , 1); //remove any leading slashes
 		var loader = new WWW("file:///" + fullPath);
@@ -84,7 +99,18 @@ public class SFXLoader : MonoBehaviour
 		loader.Dispose();
 	}
 
-	public static void PlaySFX (string fileName , string localPath,Vector3 position)
+	public static void PlaySFX(TESUnity.ESM.SOUNRecord record , Vector3 position)
+	{
+		if ( record != null )
+		{
+			if ( record.FNAM != null )
+			{
+				PlaySFX(record.FNAM.value , "" , position);
+			}
+		}
+	}
+
+	public static void PlaySFX (string fileName , string localPath , Vector3 position)
 	{
 		var sfx = LoadSFX(fileName , localPath );
 		if ( sfx.loaded )

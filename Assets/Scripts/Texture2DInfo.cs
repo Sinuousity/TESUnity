@@ -6,6 +6,7 @@
 /// </summary>
 public class Texture2DInfo
 {
+	public string fileName;
 	public int width, height;
 	public TextureFormat format;
 	public bool hasMipmaps;
@@ -26,6 +27,7 @@ public class Texture2DInfo
 	public Texture2D ToTexture2D()
 	{
 		var texture = new Texture2D(width, height, format, hasMipmaps);
+		texture.name = fileName;
 
 		if(rawData != null)
 		{

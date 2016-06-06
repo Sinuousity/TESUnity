@@ -6,7 +6,9 @@ public static class DDSReader
 {
 	public static Texture2DInfo LoadDDSTexture(string filePath, bool flipVertically = false)
 	{
-		return LoadDDSTexture(File.Open(filePath, FileMode.Open, FileAccess.Read), flipVertically);
+		var info = LoadDDSTexture(File.Open(filePath, FileMode.Open, FileAccess.Read), flipVertically);
+		info.fileName = Path.GetFileNameWithoutExtension(filePath);
+		return info;
 	}
 	public static Texture2DInfo LoadDDSTexture(Stream inputStream, bool flipVertically = false)
 	{

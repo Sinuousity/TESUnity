@@ -108,6 +108,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\TES\Editor\EditorGUIHelpers.cs" />
     <Compile Include="Assets\Scripts\TES\Editor\SFXCollection_Editor.cs" />
+    <Compile Include="Assets\Scripts\TES\Editor\UtilityInspectors\Material_Cache_Viewer.cs" />
     <Compile Include="Assets\Scripts\TES\Editor\UtilityInspectors\SFX_Cache_Viewer.cs" />
   </ItemGroup>
   <ItemGroup>

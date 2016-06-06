@@ -13,36 +13,39 @@ public static class EditorGUIHelpers
 		}
 	}
 
-	public static void FancyListScrollView(ref Vector2 scrollPos , string label , List<string> list , ref List<int> selected , int maxVertical = 20)
+	public static void FancyListArea(ref Vector2 scrollPos , string label , List<string> list , ref List<int> selected , int maxVertical = 20)
 	{
-		GUIStyle boxed = new GUIStyle(GUI.skin.scrollView);
+		var padlessBox = new GUIStyle(GUI.skin.box);
+		padlessBox.stretchHeight = true;
+		padlessBox.padding = new RectOffset(0 , 0 , 0 , 0);
+
+		var boxed = new GUIStyle(GUI.skin.box);
 		boxed.normal.background = GUI.skin.box.normal.background;
-		boxed.border = GUI.skin.box.border;
-		boxed.padding = GUI.skin.box.padding;
-		boxed.overflow = new RectOffset(1,0,0,0);
-		boxed.clipping = TextClipping.Overflow;
+		boxed.stretchHeight = true;
+		boxed.stretchWidth = true;
 
-		GUIStyle colored = new GUIStyle(GUI.skin.label);
+		var colored = new GUIStyle(GUI.skin.label);
 		colored.normal.background = EditorGUIUtility.whiteTexture;
-		boxed.padding = new RectOffset(0 , 0 , 0 , 0);
-		boxed.margin = new RectOffset(0 , 0 , 0 , 0);
-		colored.overflow = new RectOffset(3 , 3 , 1 , 1);
+		colored.stretchHeight = true;
+		colored.stretchWidth = true;
 
-		EditorGUILayout.PrefixLabel(label);
-		scrollPos = EditorGUILayout.BeginScrollView(scrollPos , boxed , GUILayout.MaxHeight(maxVertical * 18f + 17f));
+		if ( !string.IsNullOrEmpty(label) ) EditorGUILayout.PrefixLabel(label);
+		GUILayout.BeginVertical(padlessBox , GUILayout.MinHeight(maxVertical * 18f + 13f));
+
 		GUILayout.BeginHorizontal();
 		GUILayout.BeginVertical(boxed);
 
 		int y = 0;
-		for ( int i = 0; i < list.Count ; i++ )
+		int j = 0;
+		for ( int i = 0 ; i < list.Count ; i++ )
 		{
-			GUI.backgroundColor = ( i % 2 == 0 ) ? Color.white : Color.grey* 1.7f;
+			GUI.backgroundColor = ( ( i + j ) % 2 == 0 ) ? Color.white : Color.grey * 1.7f;
 			if ( selected.Contains(i) )
 			{
-				GUI.backgroundColor = new Color(0.2f , 0.2f , 0.2f , 1f);
+				GUI.backgroundColor = new Color(0.3f , 0.3f , 0.3f , 1f);
 				colored.normal.textColor = Color.white;
 			}
-			if ( GUILayout.Button(list[ i ] , colored , GUILayout.MaxWidth(130f)) )
+			if ( GUILayout.Button(list[ i ] , colored) )
 			{
 				if ( selected.Contains(i) ) selected.Remove(i); else selected.Add(i);
 			}
@@ -50,9 +53,10 @@ public static class EditorGUIHelpers
 			colored.normal.textColor = Color.black;
 
 			y++;
-			if ( y >= maxVertical )
+			if ( y >= maxVertical && i + 1 < list.Count )
 			{
 				y = 0;
+				j++;
 				GUILayout.EndVertical();
 				GUILayout.BeginVertical(boxed);
 			}
@@ -61,6 +65,6 @@ public static class EditorGUIHelpers
 		GUILayout.EndVertical();
 		GUILayout.EndHorizontal();
 
-		EditorGUILayout.EndScrollView();
+		GUILayout.EndVertical();
 	}
 }

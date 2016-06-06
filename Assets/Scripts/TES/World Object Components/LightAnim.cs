@@ -44,7 +44,7 @@ namespace TESUnity
 					value = 1f - value;
 					break;
 			}
-			light.intensity = Mathf.Lerp(0.2f * baseIntensity , baseIntensity , value);
+			light.intensity = Mathf.Lerp(light.intensity , Mathf.Lerp(0.2f * baseIntensity , baseIntensity , value) , Time.deltaTime * 5f);
 		}
 	}
 }
