@@ -1,3 +1,4 @@
+#include "UnityCG.cginc"
 
 half4 _Color;
 sampler2D _MainTex;
@@ -9,11 +10,14 @@ half _Metallic;
 
 struct Input
 {
+	float4 color : COLOR;
 	float2 uv_MainTex;
 	float2 uv_DetailTex;
 	float2 uv_DarkTex;
 	float2 uv_GlowTex;
 	float2 uv_GlossTex;
+	float3 worldPos;
+	float3 viewDir;
 };
 
 
@@ -35,6 +39,7 @@ half4 ReadDiffuse(Input i)
 	res *= tex2D(_MainTex, i.uv_MainTex);
 	res *= tex2D(_DetailTex, i.uv_DetailTex);
 	res *= _Color;
+	res *= i.color;//apply vertex color
 	return res;
 }
 
@@ -51,4 +56,9 @@ half ReadGloss(Input i)
 half4 ReadGlow(Input i)
 {
 	return tex2D(_GlowTex, i.uv_GlowTex);
+}
+
+void myfinal(Input i, SurfaceOutputStandard o, inout half4 color)
+{
+
 }

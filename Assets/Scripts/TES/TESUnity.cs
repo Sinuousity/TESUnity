@@ -39,11 +39,15 @@ namespace TESUnity
 		public Sprite UIMaskImg;
 		public Sprite UISpriteImg;
 
+		public Material terrainMaterial;
 		public GameObject waterPrefab;
 		#endregion
 
 		public static bool FoundSettings		{ get { return __settingsFile != null; } }
 		public static string MWDataPath			{ get { if ( FoundSettings ) return Settings.engine.dataFilesPath; else return LocalSettingsObject.dataPathOverride; } }
+		public static string IconsPath			{ get { if ( FoundSettings ) return GamePaths.PathCombine( MWDataPath , "Icons"); else return null; } }
+		public static string MusicPath			{ get { if ( FoundSettings ) return GamePaths.PathCombine( MWDataPath , "Music"); else return null; } }
+		public static string SoundsPath			{ get { if ( FoundSettings ) return GamePaths.PathCombine( MWDataPath , "Sound"); else return null; } }
 		public static bool UseRigidbodies		{ get { return Settings.engine.useKinematicRigidbodies; } }
 		public static bool UseSphereCast		{ get { return Settings.engine.useSphereCast; } }
 		public static bool ShowObjectNames		{ get { return Settings.engine.showObjectNames; } }
@@ -101,7 +105,7 @@ namespace TESUnity
 			}
 
 			// Spawn the player.
-			MWEngine.SpawnPlayerInside("Imperial Prison Ship", new Vector3(0.8f, -0.25f, -1.4f));
+			MWEngine.SpawnPlayer(WorldPosition.defaultSpawn);
 		}
 		private void OnDestroy()
 		{
@@ -131,7 +135,8 @@ namespace TESUnity
 
 			if (Input.GetKeyDown(KeyCode.O))
 			{
-				SFXLoader.PlaySFX(debugCollection.RandomFile() , debugCollection.localPath , Camera.allCameras[ 0 ].transform.position);
+				var soundRecords = MWEngine.dataReader.MorrowindESMFile.recordsByType[ typeof(ESM.SOUNRecord) ];
+				SFXLoader.PlaySFX(( ESM.SOUNRecord )soundRecords[ Random.Range(0 , soundRecords.Count) ] , new Position(SFXLoader.GetPointAroundPlayer(10f)));
 			}
 		}
 
@@ -242,5 +247,21 @@ namespace TESUnity
 				}
 			}
 		}
+	}
+
+	[System.Serializable]
+	public class WorldPosition
+	{
+		public string cellName;
+		public Vector3 position;
+		public bool isInterior { get { return !string.IsNullOrEmpty(cellName); } }
+
+		public WorldPosition( Vector3 position , string cellName = "" )
+		{
+			this.cellName = cellName;
+			this.position = position;
+		}
+
+		public static WorldPosition defaultSpawn { get { return new WorldPosition(new Vector3(0.8f , -0.25f , -1.4f) , "Imperial Prison Ship"); } }
 	}
 }

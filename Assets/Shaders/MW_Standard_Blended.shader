@@ -18,7 +18,7 @@
 		{
 			Tags { "RenderType" = "Transparent" "Queue" = "Transparent" }
 			Blend[_SrcBlend][_DstBlend]
-			ZWrite Off
+			ZWrite On
 
 			CGPROGRAM
 			#pragma surface surf Standard alpha:fade

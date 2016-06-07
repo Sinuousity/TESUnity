@@ -118,6 +118,14 @@ namespace TESUnity
 			return new InRangeCellInfo(cellObj, cellObjectsContainer, cellCreationCoroutine);
 		}
 
+		public void SpawnPlayer ( WorldPosition location )
+		{
+			if ( location.isInterior )
+				SpawnPlayerInside(location.cellName , location.position);
+			else
+				SpawnPlayerOutside(location.position);
+		}
+
 		public void SpawnPlayerOutside(Vector3 position)
 		{
 			var cellIndices = GetExteriorCellIndices(position);
@@ -231,7 +239,11 @@ namespace TESUnity
 
 		public void RemoveInteractText ()
 		{
-			if ( interactTextObj.activeSelf ) interactTextObj.SetActive( false );
+			if ( interactTextObj.activeSelf && interactText.text != "" )
+			{
+				interactText.text = "";
+				//interactTextObj.SetActive(false);
+			}
 		}
 
 		public void SetInteractText ( string text )
@@ -450,7 +462,6 @@ namespace TESUnity
 			lightComponent.color = new Color32(LIGH.LHDT.red, LIGH.LHDT.green, LIGH.LHDT.blue, 255);
 			lightComponent.intensity = 1.5f;
 			lightComponent.bounceIntensity = 0f;
-			lightComponent.shadows = ( TESUnity.EnableLightShadows ) ? LightShadows.Soft : LightShadows.None;
 
 
 			if ( !indoors && !TESUnity.EnableExteriorLights )//disabling exterior cell lights because there is no day/night cycle
@@ -635,7 +646,13 @@ namespace TESUnity
 			var heightSampleDistance = Convert.exteriorCellSideLengthInMeters / (LAND_SIDE_LENGTH_IN_SAMPLES - 1);
 
 			var terrain = GameObjectUtils.CreateTerrain(heights, heightRange / Convert.meterInMWUnits, heightSampleDistance, splatPrototypes, alphaMap, terrainPosition);
-			terrain.GetComponent<Terrain>().materialType = Terrain.MaterialType.BuiltInLegacyDiffuse;
+			if ( TESUnity.instance.terrainMaterial == null )
+				terrain.GetComponent<Terrain>().materialType = Terrain.MaterialType.BuiltInLegacyDiffuse;
+			else
+			{
+				terrain.GetComponent<Terrain>().materialType = Terrain.MaterialType.Custom;
+				terrain.GetComponent<Terrain>().materialTemplate = TESUnity.instance.terrainMaterial;
+			}
 
 			terrain.transform.parent = parent.transform;
 		}
@@ -816,12 +833,14 @@ namespace TESUnity
 
 		private void OpenDoor(GenericObjectComponent component)
 		{
-			if(!component.doorData.leadsToAnotherCell)
+			if (!component.doorData.leadsToAnotherCell)
 			{
+				component.PlayOpenSound(false);
 				component.Interact();
 			}
 			else
 			{
+				component.PlayOpenSound(true);
 				// The door leads to another cell, so destroy all currently loaded cells.
 				DestroyAllCells();
 
@@ -894,7 +913,7 @@ namespace TESUnity
 			lightComponent.intensity = 1.5f;
 			lightComponent.color = new Color32(245, 140, 40, 255);
 			lightComponent.enabled = false;
-			lightComponent.shadows = TESUnity.EnableLightShadows ? LightShadows.Hard : LightShadows.None;
+			lightComponent.shadows = ( TESUnity.EnableLightShadows ) ? LightShadows.Soft : LightShadows.None;
 
 			lantern.transform.localPosition = cameraPoint.transform.localPosition - Vector3.up * 0.5f;
 			lantern.transform.SetParent(playerComponent.transform, false);

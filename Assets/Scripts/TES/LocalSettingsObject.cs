@@ -20,6 +20,19 @@ namespace TESUnity
 		public static string dataPathOverride = "";
 
 		[System.Serializable]
+		public class World
+		{
+			public WorldPosition spawnPosition = WorldPosition.defaultSpawn;
+			public Dictionary<string , WorldPosition> savedPositions = new Dictionary<string , WorldPosition>();
+
+			public void SaveLocation(string title , Vector3 position , string cellName = "" )
+			{
+				savedPositions.Add(title , new WorldPosition(position , cellName));
+			}
+		}
+		public World world = new World();
+
+		[System.Serializable]
 		public class Engine
 		{
 			public string dataFilesPath = "";//Default path should be blank so that the path selection UI is shown.

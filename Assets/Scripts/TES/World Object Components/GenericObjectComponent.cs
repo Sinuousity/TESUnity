@@ -162,6 +162,9 @@ namespace TESUnity
 					if ( pulseSlow ) lightAnim.mode = LightAnimMode.PulseSlow;
 					if ( fire ) lightAnim.mode = LightAnimMode.Fire;
 				}
+
+				bool dynamic = Utils.ContainsBitFlags(( uint )lightData.flags , ( uint )LightData.LightFlags.Dynamic);
+				lightData.lightComponent.shadows = ( TESUnity.EnableLightShadows && dynamic ) ? LightShadows.Hard : LightShadows.None;
 			}
 			else
 			{
@@ -189,6 +192,20 @@ namespace TESUnity
 		}
 
 
+		public void PlayOpenSound(bool force2D)
+		{
+			ESM.SOUNRecord SOUN = MorrowindEngine.instance.dataReader.FindSound(doorData.openSound);
+			if ( force2D )
+				SFXLoader.PlaySFX(SOUN , new Position(transform.position) , new Force2DSpace() , new Volume(0.25f));
+			else
+				SFXLoader.PlaySFX(SOUN , new Position(transform.position));
+		}
+
+		public void PlayCloseSound()
+		{
+			ESM.SOUNRecord SOUN = MorrowindEngine.instance.dataReader.FindSound(doorData.closeSound);
+			SFXLoader.PlaySFX(SOUN , new Position(transform.position));
+		}
 
 		#region door functions
 		private void Open()
@@ -203,8 +220,6 @@ namespace TESUnity
 
 		private IEnumerator c_Open()
 		{
-			ESM.SOUNRecord SOUN = MorrowindEngine.instance.dataReader.FindSound(doorData.openSound);
-			SFXLoader.PlaySFX(SOUN , transform.position);
 			doorData.moving = true;
 			while ( Quaternion.Angle(transform.rotation , doorData.openRotation) > 1f )
 			{
@@ -218,8 +233,7 @@ namespace TESUnity
 		private IEnumerator c_Close()
 		{
 			doorData.moving = true;
-			ESM.SOUNRecord SOUN = MorrowindEngine.instance.dataReader.FindSound(doorData.closeSound);
-			SFXLoader.PlaySFX(SOUN , transform.position);
+			PlayCloseSound();
 			yield return new WaitForSeconds(0.5f);
 			while ( Quaternion.Angle(transform.rotation , doorData.closedRotation) > 1f )
 			{

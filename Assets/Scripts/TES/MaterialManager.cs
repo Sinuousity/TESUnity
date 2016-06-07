@@ -53,10 +53,15 @@ namespace TESUnity
 				else
 					m = BuildMaterial();
 
-				if ( mp.textures.mainFilePath != null && m.HasProperty( "_MainTex" ) ) m.SetTexture( "_MainTex" , textureManager.LoadTexture( mp.textures.mainFilePath ) );
+				if ( mp.textures.mainFilePath != null && m.HasProperty("_MainTex") )
+				{
+					m.SetTexture("_MainTex" , textureManager.LoadTexture(mp.textures.mainFilePath));
+					m.name = m.mainTexture.name;
+				}
 				if ( mp.textures.detailFilePath != null && m.HasProperty( "_DetailTex" ) ) m.SetTexture( "_DetailTex" , textureManager.LoadTexture( mp.textures.detailFilePath ) );
 				if ( mp.textures.darkFilePath != null && m.HasProperty( "_DarkTex" ) ) m.SetTexture( "_DarkTex" , textureManager.LoadTexture( mp.textures.darkFilePath ) );
-				if ( mp.textures.glossFilePath != null && m.HasProperty( "_GlossTex" ) ) m.SetTexture( "_GlossTex" , textureManager.LoadTexture( mp.textures.glossFilePath ) );
+				if ( mp.textures.glossFilePath != null && m.HasProperty( "_GlossTex" ) )
+					m.SetTexture( "_GlossTex" , textureManager.LoadTexture( mp.textures.glossFilePath ) );
 				if ( mp.textures.glowFilePath != null && m.HasProperty( "_Glowtex" ) )
 				{
 					m.SetTexture( "_Glowtex" , textureManager.LoadTexture( mp.textures.glowFilePath ) );
@@ -66,6 +71,9 @@ namespace TESUnity
 
 				if ( m.HasProperty( "_Metallic" ) ) m.SetFloat( "_Metallic" , 0f );
 				if ( m.HasProperty( "_Glossiness" ) ) m.SetFloat( "_Glossiness" , 0f );
+
+				//m.SetTexture("_GlossTex" , textureManager.LoadTexture(mp.textures.glossFilePath));
+
 				existingMaterials[ mp ] = m;
 				changed = true;
 			}

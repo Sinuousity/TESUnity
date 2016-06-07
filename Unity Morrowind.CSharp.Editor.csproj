@@ -113,9 +113,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\MWCG.cginc" />
+    <None Include="Assets\Shaders\MWTerrainCG.cginc" />
     <None Include="Assets\Shaders\MW_Standard.shader" />
     <None Include="Assets\Shaders\MW_Standard_Blended.shader" />
     <None Include="Assets\Shaders\MW_Standard_Tested.shader" />
+    <None Include="Assets\Shaders\MW_Terrain-Add.shader" />
+    <None Include="Assets\Shaders\MW_Terrain.shader" />
     <None Include="Assets\Standard Assets\Environment\Water (Basic)\Shaders\FXWaterBasic.shader" />
     <None Include="Assets\Standard Assets\Environment\Water\Water\Shaders\FXWaterPro.shader" />
     <None Include="Assets\Standard Assets\Environment\Water\Water4\Shaders\FXWater4Advanced.shader" />

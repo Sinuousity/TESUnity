@@ -34,7 +34,7 @@ RenderSettings:
   m_DefaultReflectionMode: 0
   m_DefaultReflectionResolution: 128
   m_ReflectionBounces: 1
-  m_ReflectionIntensity: 1
+  m_ReflectionIntensity: 0.5
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
 --- !u!157 &3
@@ -129,6 +129,10 @@ Prefab:
       value: 
       objectReference: {fileID: 11400000, guid: 640c0ba908986e54d837e2dfb48376e2,
         type: 2}
+    - target: {fileID: 11464354, guid: d9a1ba27e850d6d478d4a64d027d1204, type: 2}
+      propertyPath: terrainMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: c6ff9a5c9f98e8748a4dfcbe78aaf622, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: d9a1ba27e850d6d478d4a64d027d1204, type: 2}
   m_IsPrefabParent: 0

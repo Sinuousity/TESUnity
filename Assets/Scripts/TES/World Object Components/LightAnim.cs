@@ -20,22 +20,27 @@ namespace TESUnity
 
 		void Update ()
 		{
-			float value = 1f;
+			var value = 1f;
+			var lerpSpeed = 25f;
 			switch (mode)
 			{
 				case LightAnimMode.None:
 					break;
 				case LightAnimMode.Flicker:
-					value = Mathf.Round(Mathf.Clamp01(Random.value + 0.1f));
+					value = Mathf.Round(Random.value);
+					lerpSpeed = 10f;
 					break;
 				case LightAnimMode.FlickerSlow:
-					value = Mathf.Round(Mathf.Clamp01(Random.value + 0.47f));
+					value = Mathf.Round(Random.value);
+					lerpSpeed = 2f;
 					break;
 				case LightAnimMode.Pulse:
 					value = Mathf.Sin(Time.time) * 0.5f + 0.5f;
+					lerpSpeed = 40f;
 					break;
 				case LightAnimMode.PulseSlow:
 					value = Mathf.Sin(Time.time * 0.5f) * 0.5f + 0.5f;
+					lerpSpeed = 40f;
 					break;
 				case LightAnimMode.Fire:
 					value = Mathf.PerlinNoise(Time.time * 0.8f , transform.position.x+transform.position.z * 7.9253618f);
@@ -44,7 +49,7 @@ namespace TESUnity
 					value = 1f - value;
 					break;
 			}
-			light.intensity = Mathf.Lerp(light.intensity , Mathf.Lerp(0.2f * baseIntensity , baseIntensity , value) , Time.deltaTime * 5f);
+			light.intensity = Mathf.Lerp(light.intensity , Mathf.Lerp(0.2f * baseIntensity , baseIntensity , value) , Time.deltaTime * lerpSpeed);
 		}
 	}
 }
